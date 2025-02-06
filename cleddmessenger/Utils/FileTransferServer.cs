@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
-using cleddmessenger.Utils;
+using Neme.Utils;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class FileTransferServer
     {

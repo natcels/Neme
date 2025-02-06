@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     public static class Prompt
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NAudio.Wave;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class AudioCapture
     {

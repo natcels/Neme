@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     public class NullToVisibilityConverter : IValueConverter
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net.WebSockets;
 using System.Net;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class WebSocketServe
     {

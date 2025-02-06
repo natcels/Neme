@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class TcpClientHandler
     {

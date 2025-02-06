@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using cleddmessenger.Models;
+using Neme.Models;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     public class ChatBubbleTemplateSelector : DataTemplateSelector
     {

@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using WebSocketSharp.Server;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class SignalingServer : WebSocketBehavior
     {

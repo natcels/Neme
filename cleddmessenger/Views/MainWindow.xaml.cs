@@ -1,14 +1,14 @@
-﻿using cleddmessenger.Utils;
+﻿using Neme.Utils;
 using System;
 using System.Windows;
-using cleddmessenger.ViewModels;
-using cleddmessenger.Models;
+using Neme.ViewModels;
+using Neme.Models;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Data.SQLite;
 
-namespace cleddmessenger.Views
+namespace Neme.Views
 {
     public partial class MainWindow : Window
     {

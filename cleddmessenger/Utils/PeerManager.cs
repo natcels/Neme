@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class PeerManager
     {

@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 
-namespace cleddmessenger.Models
+namespace Neme.Models
 {
     public class Group :  INotifyPropertyChanged
     {

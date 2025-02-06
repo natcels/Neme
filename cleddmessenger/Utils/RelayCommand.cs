@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     public class RelayCommand : ICommand
     {

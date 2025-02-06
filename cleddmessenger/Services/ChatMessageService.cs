@@ -1,5 +1,5 @@
-﻿using cleddmessenger.Data;
-using cleddmessenger.Models;
+﻿using Neme.Data;
+using Neme.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cleddmessenger.Services
+namespace Neme.Services
 {
     public class ChatMessageService
     {

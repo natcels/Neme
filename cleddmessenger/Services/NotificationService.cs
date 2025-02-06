@@ -6,7 +6,7 @@ using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using System.Windows;
 
-namespace cleddmessenger.Helpers
+namespace Neme.Helpers
 {
     public class NotificationService
     {

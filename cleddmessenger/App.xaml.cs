@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace cleddmessenger
+namespace Neme
 {
     /// <summary>
     /// Interaction logic for App.xaml

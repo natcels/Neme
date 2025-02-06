@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class PeerDiscovery
     {
@@ -28,7 +28,7 @@ namespace cleddmessenger.Utils
             string encryptedMessage = aesEncryption.Encrypt(systemName);
             byte[] data = Encoding.ASCII.GetBytes(encryptedMessage);
             udpClient.Send(data, data.Length, endPoint);
-            Console.WriteLine("Discovery message broadcasted.");
+        //    Console.WriteLine("Discovery message broadcasted.");
         }
 
         // Start listening for discovery messages and decrypt them

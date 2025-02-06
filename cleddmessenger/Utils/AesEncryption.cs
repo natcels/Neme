@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class AesEncryption
     {

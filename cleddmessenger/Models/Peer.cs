@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace cleddmessenger.Models
+namespace Neme.Models
 {
     public class Peer : INotifyPropertyChanged
     {

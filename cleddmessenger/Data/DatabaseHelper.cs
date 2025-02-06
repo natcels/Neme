@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cleddmessenger.Data
+namespace Neme.Data
 {
     public class DatabaseHelper
     {

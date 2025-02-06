@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class LoggerUtility
     {

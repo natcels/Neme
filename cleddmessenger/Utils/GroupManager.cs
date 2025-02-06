@@ -1,6 +1,6 @@
-﻿using cleddmessenger.Models;
+﻿using Neme.Models;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
    public  class GroupManager
     {

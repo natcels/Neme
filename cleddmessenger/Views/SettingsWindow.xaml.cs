@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace cleddmessenger.Views
+namespace Neme.Views
 {
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml

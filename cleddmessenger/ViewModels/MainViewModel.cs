@@ -1,7 +1,7 @@
-﻿using cleddmessenger.Utils;
-using cleddmessenger.Models;
-using PeerStatus = cleddmessenger.Models.PeerStatus;
-using cleddmessenger.Helpers;
+﻿using Neme.Utils;
+using Neme.Models;
+using PeerStatus = Neme.Models.PeerStatus;
+using Neme.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,7 +15,7 @@ using System.Data.SQLite;
 using System.Windows;
 
 
-namespace cleddmessenger.ViewModels
+namespace Neme.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
@@ -89,18 +89,20 @@ namespace cleddmessenger.ViewModels
 
             LoadPeers();
             LoadGroups();
-          //  LoadMessagesFromDatabase();
+            LoadMessagesFromDatabase();
 
             _heartbeatTimer = new System.Timers.Timer(5000);
             _heartbeatTimer.Elapsed += SendHeartbeat;
             _heartbeatTimer.Start();
         }
 
+        private PeerDiscovery peerDiscovery;
+
         private void LoadPeers()
         {
             Peers.Clear(); // Clear the list before refreshing
 
-            PeerDiscovery peerDiscovery = new PeerDiscovery("255.255.255.255", 5000, Environment.MachineName);
+             peerDiscovery = new PeerDiscovery("255.255.255.255", 5000, Environment.MachineName);
             List<string> discoveredPeerNames = peerDiscovery.GetDiscoveredPeers();
 
             foreach (var peerName in discoveredPeerNames)
@@ -164,29 +166,29 @@ namespace cleddmessenger.ViewModels
 
             Messages.Add(new ChatMessage
             {
-//                SenderName = "You",
+                SenderName = "You",
                 Content = CurrentMessage,
                 Timestamp = DateTime.Now,
                 IsSentByCurrentUser = true,
                 ReceiverName = SelectedPeer.Name
             });
 
-            SaveMessagesToDatabase();
-            CurrentMessage = string.Empty;
+//            SaveMessagesToDatabase();
+  //          CurrentMessage = string.Empty;
 
         }
 
         private void SendMessageToPeer(string message, Peer peer)
         {
         
-            Messages.Add(new ChatMessage
-            {
-                Content = _aesEncryption.Encrypt(CurrentMessage),
-                ReceiverName = SelectedPeer.Name,
-                Timestamp = DateTime.Now,
-                IsSentByCurrentUser = true,
+            //Messages.Add(new ChatMessage
+            //{
+            //    Content = _aesEncryption.Encrypt(CurrentMessage),
+            //    ReceiverName = SelectedPeer.Name,
+            //    Timestamp = DateTime.Now,
+            //    IsSentByCurrentUser = true,
 
-            });
+            //});
             SaveMessagesToDatabase() ;
             CurrentMessage = string.Empty;
         }
@@ -251,16 +253,19 @@ namespace cleddmessenger.ViewModels
 
         private void SendHeartbeat(object sender, ElapsedEventArgs e)
         {
+         
+
             foreach (var peer in Peers)
             {
+                peerDiscovery.StartBroadcasting();
                 peer.Status = PeerStatus.Online; // Simulated check
+
             }
         }
 
         private void SaveMessagesToDatabase()
         {
             string connectionString = "Data Source=messages.db;Version=3;";
-            string encryptionKey = Environment.MachineName; // Use machine name as encryption key
 
             using (var connection = new SQLiteConnection(connectionString))
             {
@@ -279,7 +284,7 @@ namespace cleddmessenger.ViewModels
                             message.SenderName = Environment.MachineName;
                         }
                         command.Parameters.AddWithValue("@SenderName", message.SenderName);
-                        command.Parameters.AddWithValue("@Content", message.Content); // Encrypt message
+                        command.Parameters.AddWithValue("@Content", _aesEncryption.Encrypt( message.Content)); // Encrypt message
                         command.Parameters.AddWithValue("@Timestamp", message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
 
                         command.ExecuteNonQuery();
@@ -292,22 +297,41 @@ namespace cleddmessenger.ViewModels
         private void LoadMessagesFromDatabase()
         {
             string connectionString = "Data Source=messages.db;Version=3;";
-            string encryptionKey = Environment.MachineName; // Use machine name as encryption key
-            Messages = new ObservableCollection<ChatMessage>();
 
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
                 using (var command = new SQLiteCommand("SELECT SenderName, Content, Timestamp FROM Messages", connection))
+                using (var reader = command.ExecuteReader())
                 {
-                    using (var reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        string encryptedContent = reader["Content"]?.ToString();
+
+                        // 🔍 Check if Content is NULL or empty before decrypting
+                        if (string.IsNullOrEmpty(encryptedContent))
                         {
+                            Console.WriteLine("Skipping empty message...");
+                            continue; // Skip empty messages
+                        }
+
+                        try
+                        {
+                            string decryptedContent = _aesEncryption.Decrypt(encryptedContent);
                             Messages.Add(new ChatMessage
                             {
                                 SenderName = reader["SenderName"].ToString(),
-                                Content = _aesEncryption.Decrypt(reader["Content"].ToString()), // Decrypt message
+                                Content = decryptedContent,
+                                Timestamp = DateTime.Parse(reader["Timestamp"].ToString())
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Decryption failed: {ex.Message}");
+                            Messages.Add(new ChatMessage
+                            {
+                                SenderName = reader["SenderName"].ToString(),
+                                Content = "[Decryption Error]",
                                 Timestamp = DateTime.Parse(reader["Timestamp"].ToString())
                             });
                         }
@@ -315,6 +339,7 @@ namespace cleddmessenger.ViewModels
                 }
             }
         }
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

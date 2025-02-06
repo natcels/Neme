@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class WebSocketClient
     {
         private WebSocket _webSocket;
         public WebSocketClient()
         {
-            _webSocket = new WebSocket("ws://127.0.0.1:8080/signaling");  // Replace with server IP
+            _webSocket = new WebSocket("ws://127.0.0.1:8080/signaling");  
             _webSocket.OnMessage += (sender, e) =>
             {
-                Console.WriteLine("Received: " + e.Data);
+                //Console.WriteLine("Received: " + e.Data);
             };
         }
         public void Connect()

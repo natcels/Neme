@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace cleddmessenger.Utils
+namespace Neme.Utils
 {
     internal class HeartbeatSender
     {

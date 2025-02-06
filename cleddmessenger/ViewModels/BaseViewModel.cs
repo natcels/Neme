@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace cleddmessenger.ViewModels
+namespace Neme.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
