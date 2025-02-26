@@ -1,0 +1,30 @@
+﻿<Window x:Class="Neme.Views.Calls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Neme.Views"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Style="{StaticResource MaterialDesignWindow}"
+        Title="Calls" Height="450" Width="800">
+    <Grid>
+        <!-- Contact List -->
+        <ListBox ItemsSource="{Binding AvailableUsers}"
+                 SelectedItem="{Binding SelectedUser}"
+                 DisplayMemberPath="Username"
+                 Margin="10,10,10,80"/>
+
+        <!-- Start Call Button -->
+        <Button Command="{Binding StartCallCommand}"
+                Width="150" Height="50"
+                Background="#6200EA" Foreground="White"
+                Style="{StaticResource MaterialDesignRaisedButton}">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="Video" Width="24" Height="24" Margin="0,0,10,0"/>
+                <TextBlock Text="Start Call"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+
+</Window>
