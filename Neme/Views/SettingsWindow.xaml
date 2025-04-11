@@ -39,7 +39,7 @@
             </TabItem>
 
             <!-- Theme Settings Tab -->
-            <TabItem Header="General">
+            <TabItem Header="General" Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\chat_bg.jpg" />
     <None Remove="Views\user-avatar.jpg" />
   </ItemGroup>
 
@@ -19,12 +20,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
+    <PackageReference Include="BCrypt.Net" Version="0.1.0" />
+    <PackageReference Include="MaterialDesignColors" Version="5.2.2-ci942" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.2.2-ci942" />
     <PackageReference Include="Microsoft.MixedReality.WebRTC" Version="2.0.2" />
+    <PackageReference Include="mrwebrtc" Version="2.0.2" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog" Version="5.3.4" />
-    <PackageReference Include="runtime.aot.System.Threading.Timer" Version="4.0.1" />
+    <PackageReference Include="NLog" Version="5.4.0" />
+    <PackageReference Include="runtime.aot.System.Threading.Timer" Version="4.3.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
     <PackageReference Include="System.Net.Sockets" Version="4.3.0" />
     <PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
@@ -35,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Views\chat_bg.jpg" />
     <Resource Include="Views\user-avatar.jpg" />
   </ItemGroup>
 

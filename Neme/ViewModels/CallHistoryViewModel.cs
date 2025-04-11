@@ -9,7 +9,7 @@ namespace Neme.ViewModels
 {
     public class CallHistoryViewModel : BaseViewModel
     {
-        private readonly CallService _callService;
+        private readonly VoiceCallService _callService;
 
         public ObservableCollection<CallSession> CallHistory { get; }
 
@@ -24,19 +24,19 @@ namespace Neme.ViewModels
             }
         }
 
-        public CallHistoryViewModel(CallService callService)
+        public CallHistoryViewModel(VoiceCallService callService)
         {
             _callService = callService;
-            CallHistory = new ObservableCollection<CallSession>(_callService.GetCallHistory());
+      //      CallHistory = new ObservableCollection<CallSession>(_callService.GetCallHistory());
         }
 
         public void RefreshCallHistory()
         {
             CallHistory.Clear();
-            foreach (var call in _callService.GetCallHistory().OrderByDescending(c => c.StartTime))
-            {
-                CallHistory.Add(call);
-            }
+            //foreach (var call in _callService.GetCallHistory().OrderByDescending(c => c.StartTime))
+            //{
+            //    CallHistory.Add(call);
+            //}
         }
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>

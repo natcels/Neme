@@ -48,7 +48,7 @@ namespace Neme.Utils
             Directory.CreateDirectory("ReceivedFiles");
             File.WriteAllBytes(savePath, fileData);
 
-            Console.WriteLine($"File '{fileName}' received and saved to {savePath}.");
+            LoggerUtility.LogInfo($"File '{fileName}' received and saved to {savePath}.");
         }
     }
 }

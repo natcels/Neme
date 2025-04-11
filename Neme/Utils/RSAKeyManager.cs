@@ -42,7 +42,7 @@ namespace Neme.Utils
         {
             rsa.PersistKeyInCsp = false; // Do not store keys in Windows CNG
             rsa.Clear();
-            rsa = new RSACryptoServiceProvider(2048);
+            //rsa = new RSACryptoServiceProvider(2048);
         }
     }
 }

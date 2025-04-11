@@ -14,7 +14,8 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="AntiqueWhite" Text="{Binding SenderName}" FontSize="12" FontWeight="Bold" HorizontalAlignment="Right"/>
-                        <TextBlock Foreground="AntiqueWhite" Text="{Binding Timestamp}" FontSize="9" FontStyle="Italic" HorizontalAlignment="Left"/>
+                        <TextBlock Foreground="AntiqueWhite" Text="{Binding Timestamp, StringFormat='HH:mm'}" FontSize="9" FontStyle="Italic" HorizontalAlignment="Left"/>
+                        <TextBlock Text="✔️" Visibility="{Binding IsRead, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </StackPanel>
 
                     <TextBlock Foreground="AntiqueWhite"  Text="{Binding Content}" FontSize="11"/>
@@ -24,9 +25,9 @@
         <DataTemplate x:Key="ReceivedMessageTemplate">
             <Border Background="ForestGreen" Padding="10" CornerRadius="15" Margin="5" HorizontalAlignment="Left">
                 <StackPanel Orientation="Vertical">
-                   <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="AntiqueWhite" Text="{Binding SenderName}" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left"/>
-                        <TextBlock Foreground="AntiqueWhite" Text="{Binding Timestamp}" FontSize="9" FontStyle="Italic" HorizontalAlignment="Right"/>
+                        <TextBlock Foreground="AntiqueWhite" Text="{Binding Timestamp, StringFormat='HH:mm'}" FontSize="9" FontStyle="Italic" HorizontalAlignment="Right"/>
                     </StackPanel>
 
                     <TextBlock Foreground="AntiqueWhite"  Text="{Binding Content}" FontSize="11"/>
@@ -36,66 +37,115 @@
         <utils:ChatBubbleTemplateSelector x:Key="ChatBubbleSelector"
                                           SentMessageTemplate="{StaticResource SentMessageTemplate}"
                                           ReceivedMessageTemplate="{StaticResource ReceivedMessageTemplate}"/>
-        
+
     </UserControl.Resources>
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Views/chat_bg.jpg"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.RowSpan="2" VerticalAlignment="Stretch">
+            <TextBlock Text="CONTACTS" FontSize="14" FontWeight="Bold" Margin="10"/>
+            <StackPanel Orientation="Horizontal" Margin="10" Background="White">
+                <materialDesign:PackIcon Kind="Search" Height="20" Width="20" VerticalAlignment="Center"/>
+                <TextBox x:Name="SearchBox" Width="200" BorderBrush="Transparent"  VerticalAlignment="Center"  />
+            </StackPanel>
+            <Separator/>
+            <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                <ListBox ItemsSource="{Binding Peers}" SelectedItem="{Binding SelectedPeer, Mode=TwoWay}" Background="Transparent"
+                         BorderBrush="Gray" Foreground="White" Margin="10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="Navy"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+            </ScrollViewer>
+            
+            
+                <!-- Contacts List -->
+
+            </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+            
+        
         <ListBox
+            
             ItemsSource="{Binding SelectedPeerMessages}" 
-                 Grid.Row="0" Margin="10"
+             SelectedItem="{Binding LastMessage}" 
+                 Grid.Row="0" Margin="10,10,10,10"
+                Grid.Column="1"
                  Background="Transparent"
-                 Foreground="White" ItemTemplateSelector="{StaticResource ChatBubbleSelector}"
-                Height="600"
+                 ItemTemplateSelector="{StaticResource ChatBubbleSelector}"
                 
             />
+        </ScrollViewer>
 
+        
+        <DockPanel LastChildFill="True" Grid.Column="1" Grid.Row="1" 
+                   Background="red" Margin="5">
 
-
-        <Grid  Margin="10" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <!-- Upload Button -->
-                <ColumnDefinition Width="*"/>
-                <!-- TextBox (Expands) -->
-                <ColumnDefinition Width="Auto"/>
-                <!-- Send Button -->
-            </Grid.ColumnDefinitions>
             <Button Command="{Binding UploadFileCommand}"
-                    Grid.Column="0"
-                     Width="40"
-                    Height="40"
-                    VerticalAlignment="Top"
-                    Background="DodgerBlue"
-                    Foreground="White"
-         Style="{StaticResource MaterialDesignFloatingActionButton}"  Margin="0,0,10,0" ToolTip="Send File">
+                     DockPanel.Dock="Right" 
+                     Width="30"
+                    Height="30"
+                    Click="OpenFileDialog"
+                    Background="White"
+                    Foreground="DodgerBlue"
+                    Margin="5,10"
+         Style="{StaticResource MaterialDesignFloatingActionButton}"   ToolTip="Send File">
                 <materialDesign:PackIcon Kind="Paperclip" Width="24" Height="24"/>
             </Button>
-            <TextBox x:Name="MessageTextBox"
-                     Grid.Column="1"
-                     MinWidth="400"
-                      Height="Auto" 
-                     MaxHeight="120"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"
-                     VerticalAlignment="Center"
-                     Text="{Binding NewMessage, Mode=TwoWay}"
-                     Background="White" Foreground="Black"
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
 
-            <Button Command="{Binding SendMessageCommand}"
-                    Width="40" Height="40" 
-                    VerticalAlignment="Top"
-                    Grid.Column="2"
-                    Background="DodgerBlue" Foreground="White"
-                    Style="{StaticResource MaterialDesignFloatingActionButton}" 
-                    Margin="10,0,0,0">
-                <materialDesign:PackIcon Kind="Send" Width="24" Height="24"/>
+            <Button  DockPanel.Dock="Right" 
+                     Width="32" Height="32" 
+                     Foreground="DodgerBlue"
+                     Background="White"
+                     Margin="5,10"
+                     Click="ShowEmojiPicker"
+                     Style="{StaticResource MaterialDesignFloatingActionButton}"  
+                     ToolTip="Emojis">
+                <materialDesign:PackIcon Kind="Emoji" Width="24" Height="24"/>
             </Button>
-            
-        </Grid>
+            <Popup x:Name="EmojiPopup" Placement="Bottom" StaysOpen="False">
+                <Border Background="White" BorderBrush="Gray" BorderThickness="1" Padding="10">
+                    <ScrollViewer Width="300" Height="400">
+                        <WrapPanel x:Name="EmojiPanel"/>
+                    </ScrollViewer>
+                </Border>
+            </Popup>
+            <Button Command="{Binding SendMessageCommand}"
+                    Width="32" Height="32" 
+                    DockPanel.Dock="Right"    
+                    Margin="5,10"
+                    Background="White" Foreground="DodgerBlue"
+                    BorderBrush="DodgerBlue"
+                    Style="{StaticResource MaterialDesignFloatingActionButton}" 
+         >
+                <materialDesign:PackIcon Kind="Send" Width="24" Height="24" HorizontalAlignment="Center"/>
+            </Button>
+            <TextBox x:Name="MessageInput" DockPanel.Dock="Left" MinWidth="350"
+        AcceptsReturn="True" TextWrapping="Wrap"
+          VerticalScrollBarVisibility="Auto"
+          Margin="10"
+          Background="White"
+          BorderBrush="Gray"
+           MinHeight="40"
+          MaxHeight="120"
+          Text="{Binding NewMessage, Mode=TwoWay}" 
+          />
+        </DockPanel>
     </Grid>
 </UserControl>

@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="Neme.Views.AuthView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Neme.ViewModels"
+             Width="400"
+             MaxHeight="700"
+             >
+
+    <Grid>
+        <TabControl>
+            <!-- Registration Tab -->
+            <TabItem Header="Register">
+                <StackPanel Margin="20">
+                    <TextBlock Text="Username:" FontSize="14" FontWeight="Bold" Foreground="Black" Margin="10"/>
+                    <TextBox  Text="{Binding Username, Mode=TwoWay}" Foreground="Gray" Margin="10"  />
+                    <TextBlock Text="Password:" FontSize="14" FontWeight="Bold" Foreground="Black" Margin="10"/>
+                    <PasswordBox x:Name="PasswordBoxRegister"  Foreground="Gray" Margin="10" />
+                    <TextBlock Text="Email*:" FontSize="14"  Foreground="Black" Margin="10"/>
+                    <TextBox  Text="{Binding Email, Mode=TwoWay}" Margin="10" />
+                    <TextBlock Text="Department:" FontSize="14" FontWeight="Bold" Foreground="Black" Margin="10"/>
+                    <TextBox  Text="{Binding Department, Mode=TwoWay}" Margin="10" />
+
+                    <Button Content="Select Avatar" Command="{Binding SelectAvatarCommand}" />
+                    <Image Source="{Binding AvatarPath}" Width="100" Height="100" />
+
+                    <Button Content="Register" Command="{Binding RegisterCommand}" />
+                </StackPanel>
+            </TabItem>
+
+            <!-- Login Tab -->
+            <TabItem Header="Login">
+                <StackPanel Margin="20">
+                    <TextBlock Text="Username:" FontSize="14" FontWeight="Bold" Foreground="Black" Margin="10"/>
+                    <TextBox  Text="{Binding Username, Mode=TwoWay}" x:Name="UsernameText" Margin="10"/>
+                    <TextBlock Text="Password:" FontSize="14" FontWeight="Bold" Foreground="Black" Margin="10"/>
+  
+                    <PasswordBox  x:Name="PasswordText" Margin="10" />
+
+                    <Button Content="Login" Command="{Binding LoginCommand}" Click="Button_Click" />
+
+                    <Image Source="{Binding AvatarPath}" Width="100" Height="100" />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

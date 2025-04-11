@@ -10,7 +10,7 @@ namespace Neme.Models
         private MessageStatus _deliveryStatus;
         private string _encryptedContent;
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string EncryptedContent
         {
@@ -31,8 +31,10 @@ namespace Neme.Models
         public bool IsSentByCurrentUser { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
         public string SenderName { get; set; }
+        public string SenderIP { get; set; }
         public string ReceiverName { get; set; }
         public string AvatarImage { get; set; }
+        public bool IsRead { get; set; } = false;
 
         public MessageStatus DeliveryStatus
         {
@@ -79,6 +81,7 @@ namespace Neme.Models
         Image,
         File,
         Notification,
-        KeyExchange
+        KeyExchange,
+        ReadReceipt
     }
 }

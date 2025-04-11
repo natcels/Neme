@@ -17,7 +17,7 @@ namespace Neme.Views
     /// <summary>
     /// Interaction logic for ScreenShareWindow.xaml
     /// </summary>
-    public partial class ScreenShareWindow : Window
+    public partial class ScreenShareWindow : UserControl
     {
         public ScreenShareWindow()
         {

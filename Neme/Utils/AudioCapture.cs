@@ -31,7 +31,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error starting recording: {ex.Message}");
+                LoggerUtility.LogInfo($"Error starting recording: {ex.Message}");
             }
         }
 
@@ -45,7 +45,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error stopping recording: {ex.Message}");
+                LoggerUtility.LogInfo($"Error stopping recording: {ex.Message}");
             }
         }
 

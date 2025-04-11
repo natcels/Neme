@@ -76,7 +76,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error sending message: " + ex.Message);
+                LoggerUtility.LogInfo("Error sending message: " + ex.Message);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error receiving message: " + ex.Message);
+                LoggerUtility.LogInfo("Error receiving message: " + ex.Message);
                 return string.Empty;
             }
         }
@@ -117,7 +117,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error reconnecting: " + ex.Message);
+                LoggerUtility.LogInfo("Error reconnecting: " + ex.Message);
             }
         }
 
@@ -130,7 +130,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error closing connection: " + ex.Message);
+                LoggerUtility.LogInfo("Error closing connection: " + ex.Message);
             }
         }
     }

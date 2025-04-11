@@ -30,7 +30,7 @@ namespace Neme.Utils
             string message = $"{systemName}:heartbeat";  // Example message
             byte[] data = Encoding.ASCII.GetBytes(message);
             udpClient.Send(data, data.Length, endPoint);
-            Console.WriteLine($"Heartbeat sent from {systemName}");
+            LoggerUtility.LogInfo($"Heartbeat sent from {systemName}");
         }
     }
 }

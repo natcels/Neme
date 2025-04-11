@@ -20,12 +20,12 @@ namespace Neme.Utils
             try
             {
                 listener.Start();
-                Console.WriteLine("Listening for connections...");
+                LoggerUtility.LogInfo("Listening for connections...");
                 listener.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error starting listener: " + ex.Message);
+                LoggerUtility.LogInfo("Error starting listener: " + ex.Message);
             }
         }
 
@@ -41,7 +41,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error accepting client: " + ex.Message);
+                LoggerUtility.LogInfo("Error accepting client: " + ex.Message);
             }
         }
 
@@ -56,7 +56,7 @@ namespace Neme.Utils
                 while ((bytesRead = stream.Read(data, 0, data.Length)) > 0)
                 {
                     string message = Encoding.ASCII.GetString(data, 0, bytesRead);
-                    Console.WriteLine("Received message: " + message);
+                    LoggerUtility.LogInfo("Received message: " + message);
 
                     // Example response
                     string responseMessage = "Message received!";
@@ -66,7 +66,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in client communication: " + ex.Message);
+                LoggerUtility.LogInfo("Error in client communication: " + ex.Message);
             }
             finally
             {
@@ -79,11 +79,11 @@ namespace Neme.Utils
             try
             {
                 listener.Stop();
-                Console.WriteLine("Listener stopped.");
+                LoggerUtility.LogInfo("Listener stopped.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error stopping listener: " + ex.Message);
+                LoggerUtility.LogInfo("Error stopping listener: " + ex.Message);
             }
         }
     }

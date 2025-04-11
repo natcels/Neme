@@ -17,7 +17,7 @@ namespace Neme.Utils
             _httpListener.Prefixes.Add("http://localhost:8080/");
 
             _httpListener.Start();
-            Console.WriteLine("Server started at ws://localhost:8080/");
+            LoggerUtility.LogInfo("Server started at ws://localhost:8080/");
 
             while (true)
             {
@@ -41,7 +41,7 @@ namespace Neme.Utils
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Console.WriteLine("Received: " + message);
+                    LoggerUtility.LogInfo("Received: " + message);
 
                     // Broadcast message to connected clients
                     // In a real scenario, manage multiple clients

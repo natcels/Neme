@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="Neme.Views.Addressbook"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:Neme.Views"
+             xmlns:models="clr-namespace:Neme.Models"
+             Height="Auto" Width="Auto">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <!-- Peer List -->
+            <ColumnDefinition Width="2*"/>
+            <!-- Details View -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Peer List -->
+        <materialDesign:Card Grid.Column="0" Margin="10" Padding="10" >
+            
+            <ListBox x:Name="PeerListBox"
+                     ItemsSource="{Binding Peers}"
+                     SelectedItem="{Binding SelectedPeer, Mode=TwoWay}"
+                     BorderThickness="0"
+                     MaxHeight="720"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     Style="{StaticResource MaterialDesignListBox}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:Peer}">
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <Image Source="{Binding AvatarImage}"
+                                   Style="{StaticResource MaterialDesignAvatar}"
+                                    />
+                                <TextBlock Text="{Binding FriendlyName}" FontWeight="Bold"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </materialDesign:Card>
+
+        <!-- Details View -->
+        <materialDesign:Card Grid.Column="1" Margin="10" Padding="20" >
+            <Grid DataContext="{Binding SelectedPeer}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                    <Image Source="{Binding AvatarImage}" 
+                           Style="{StaticResource LargeMaterialDesignAvatar}" 
+                           />
+                    <StackPanel Margin="10 0">
+                        <TextBlock Text="{Binding FriendlyName}" FontSize="18" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Department}" FontSize="14" Foreground="Gray"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Margin="0 10 0 0">
+                    <TextBlock Text="Machine Details" FontWeight="Bold" Margin="0 10"/>
+                    <TextBlock Text="{Binding MachineName}" />
+                    <TextBlock Text="{Binding IPAddress}" />
+                    <TextBlock Text="{Binding LastSeen}" />
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

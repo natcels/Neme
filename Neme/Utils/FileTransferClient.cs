@@ -32,11 +32,11 @@ namespace Neme.Utils
                 SendFileMetadata(fileName, encryptedBytes.Length);
                 stream.Write(encryptedBytes, 0, encryptedBytes.Length);
 
-                Console.WriteLine($"File '{fileName}' sent successfully.");
+                LoggerUtility.LogInfo($"File '{fileName}' sent successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error sending file: {ex.Message}");
+                LoggerUtility.LogInfo($"Error sending file: {ex.Message}");
             }
             finally
             {
@@ -63,7 +63,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error closing connection: {ex.Message}");
+                LoggerUtility.LogInfo($"Error closing connection: {ex.Message}");
             }
         }
     }

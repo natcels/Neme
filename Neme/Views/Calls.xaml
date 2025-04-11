@@ -1,4 +1,4 @@
-﻿<Window x:Class="Neme.Views.Calls"
+﻿<UserControl x:Class="Neme.Views.Calls"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:Neme.Views"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Style="{StaticResource MaterialDesignWindow}"
-        Title="Calls" Height="450" Width="800">
+         Height="450" Width="800">
     <Grid>
         <!-- Contact List -->
         <ListBox ItemsSource="{Binding AvailableUsers}"
@@ -22,9 +21,27 @@
                 Style="{StaticResource MaterialDesignRaisedButton}">
             <StackPanel Orientation="Horizontal">
                 <materialDesign:PackIcon Kind="Video" Width="24" Height="24" Margin="0,0,10,0"/>
-                <TextBlock Text="Start Call"/>
+                <TextBlock Text="Start Meeting"/>
+            </StackPanel>
+        </Button>
+        <Button Command="{Binding StartCallCommand}"
+        Width="150" Height="50"
+        Background="#6200EA" Foreground="White"
+        Style="{StaticResource MaterialDesignRaisedButton}">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="Video" Width="24" Height="24" Margin="0,0,10,0"/>
+                <TextBlock Text="Group Call"/>
+            </StackPanel>
+        </Button>
+        <Button Command="{Binding StartCallCommand}"
+        Width="150" Height="50"
+        Background="#6200EA" Foreground="White"
+        Style="{StaticResource MaterialDesignRaisedButton}">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="CalendarAdd" Width="24" Height="24" Margin="0,0,10,0"/>
+                <TextBlock Text="Schedule Meeting"/>
             </StackPanel>
         </Button>
     </Grid>
 
-</Window>
+</UserControl>

@@ -36,7 +36,7 @@ namespace Neme.Utils
                 peers[systemName] = status;
             }
 
-            Console.WriteLine($"Peer {systemName} status: {status}");
+            LoggerUtility.LogInfo($"Peer {systemName} status: {status}");
         }
 
         public void MarkPeerUnresponsive(string systemName)
@@ -44,7 +44,7 @@ namespace Neme.Utils
             if (peers.ContainsKey(systemName))
             {
                 peers[systemName] = PeerStatus.Unresponsive;
-                Console.WriteLine($"Peer {systemName} is marked as unresponsive.");
+                LoggerUtility.LogInfo($"Peer {systemName} is marked as unresponsive.");
             }
         }
 

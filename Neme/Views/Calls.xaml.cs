@@ -17,7 +17,7 @@ namespace Neme.Views
     /// <summary>
     /// Interaction logic for Calls.xaml
     /// </summary>
-    public partial class Calls : Window
+    public partial class Calls : UserControl
     {
         public Calls()
         {

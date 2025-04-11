@@ -25,7 +25,7 @@ namespace Neme.ViewModels
 
             public ScreenShareViewModel()
             {
-                StopScreenShareCommand = new RelayCommand(StopScreenSharing);
+                //StopScreenShareCommand = new RelayCommand(StopScreenSharing);
             }
 
             private void StopScreenSharing()

@@ -24,7 +24,7 @@ namespace Neme.Utils
         public async Task StartAsync()
         {
             _listener.Start();
-            Console.WriteLine("Signaling Server started...");
+            LoggerUtility.LogInfo("Signaling Server started...");
 
             while (true)
             {
@@ -33,7 +33,7 @@ namespace Neme.Utils
                 {
                     var webSocketContext = await context.AcceptWebSocketAsync(null);
                     var connectionId = Guid.NewGuid().ToString();
-                    Console.WriteLine($"Client connected: {connectionId}");
+                    LoggerUtility.LogInfo($"Client connected: {connectionId}");
 
                     _clients[connectionId] = webSocketContext.WebSocket;
                     _ = HandleClientAsync(connectionId, webSocketContext.WebSocket);
@@ -57,7 +57,7 @@ namespace Neme.Utils
                     var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        Console.WriteLine($"Client {clientId} disconnected.");
+                        LoggerUtility.LogInfo($"Client {clientId} disconnected.");
                         _clients.TryRemove(clientId, out _);
                         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
                         return;
@@ -75,7 +75,7 @@ namespace Neme.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error with client {clientId}: {ex.Message}");
+                LoggerUtility.LogInfo($"Error with client {clientId}: {ex.Message}");
                 _clients.TryRemove(clientId, out _);
             }
         }

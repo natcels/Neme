@@ -10,155 +10,130 @@ namespace Neme.Utils
 {
     public class SignalingClient
     {
-        private readonly ClientWebSocket _socket;
+        private readonly ClientWebSocket _webSocket = new ClientWebSocket();
         private readonly Uri _serverUri;
+        private readonly string _clientId;
+        private PeerConnection _peerConnection;
 
-        public event Action<string, string, string> OnSdpReceived; // sender, sdp, type
-        public event Action<string, IceCandidate> OnIceCandidateReceived;
-        public event Action<string, string> OnCallReceived;
-        public event Action<string> OnCallAccepted;
-        public event Action<string> OnCallRejected;
-        public event Action<string> OnCallEnded;
-
-        public SignalingClient(string serverUrl)
+        public SignalingClient(string serverUrl, string clientId)
         {
-            _socket = new ClientWebSocket();
             _serverUri = new Uri(serverUrl);
+            _clientId = clientId;
         }
 
         public async Task ConnectAsync()
         {
-            await _socket.ConnectAsync(_serverUri, CancellationToken.None);
-            Console.WriteLine("Connected to signaling server.");
+            await _webSocket.ConnectAsync(_serverUri, CancellationToken.None);
+            LoggerUtility.LogInfo("Connected to signaling server.");
             _ = Task.Run(ReceiveMessagesAsync);
         }
 
+        public async Task SendMessageAsync(SignalingMessage message)
+        {
+            var jsonMessage = JsonSerializer.Serialize(message);
+            var bytes = Encoding.UTF8.GetBytes(jsonMessage);
+            var buffer = new ArraySegment<byte>(bytes);
 
+            await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+        }
 
         private async Task ReceiveMessagesAsync()
         {
             var buffer = new byte[1024 * 4];
 
-            while (_socket.State == WebSocketState.Open)
+            try
             {
-                var result = await _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Text)
+                while (_webSocket.State == WebSocketState.Open)
                 {
-                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    var data = JsonSerializer.Deserialize<SignalingMessage>(message);
-
-                    if (data == null) continue;
-
-                    switch (data.Type)
+                    var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                    if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        case "offer":
-                        case "answer":
-                            OnSdpReceived?.Invoke(data.SenderId, data.Sdp, data.Type);
-                            break;
-                        case "candidate":
-                            OnIceCandidateReceived?.Invoke(data.SenderId, data.IceCandidate);
-                            break;
-                        case "call":
-                            OnCallReceived?.Invoke(data.SenderId, data.Sdp);
-                            break;
-                        case "acceptCall":
-                            OnCallAccepted?.Invoke(data.SenderId);
-                            break;
-                        case "rejectCall":
-                            OnCallRejected?.Invoke(data.SenderId);
-                            break;
-                        case "endCall":
-                            OnCallEnded?.Invoke(data.SenderId);
-                            break;
+                        LoggerUtility.LogInfo("Disconnected from signaling server.");
+                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                        return;
                     }
+
+                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    var signalingMessage = JsonSerializer.Deserialize<SignalingMessage>(message);
+
+                    // Handle the signaling message (e.g., process offers, answers, or ICE candidates)
+                    HandleSignalingMessage(signalingMessage);
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.LogInfo($"Error receiving messages: {ex.Message}");
             }
         }
 
-        public async Task SendSdp(string recipient, string sdp, string type)
+        private async void HandleSignalingMessage(SignalingMessage message)
         {
-            var message = new SignalingMessage
+            switch (message.Type.ToLower())
             {
-                Type = type,
-                SenderId = "me",
-                RecipientId = recipient,
-                Sdp = sdp
-            };
+                case "offer":
+                    await HandleOfferAsync(message);
+                    break;
 
-            var json = JsonSerializer.Serialize(message);
-            await _socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(json)),
-                WebSocketMessageType.Text, true, CancellationToken.None);
+                case "answer":
+                    await HandleAnswerAsync(message);
+                    break;
+
+                case "candidate":
+                    HandleIceCandidate(message);
+                    break;
+
+                case "leave":
+                    HandleLeave();
+                    break;
+
+                default:
+                    LoggerUtility.LogError($"Unknown signaling message type: {message.Type}");
+                    break;
+            }
         }
 
-        public async Task SendIceCandidate(string recipient, IceCandidate candidate)
+        private async Task HandleOfferAsync(SignalingMessage message)
         {
-            var message = new SignalingMessage
-            {
-                Type = "candidate",
-                SenderId = "me",
-                RecipientId = recipient,
-                IceCandidate = candidate
-            };
+            LoggerUtility.LogInfo("Received SDP offer.");
+            var remoteDesc = new SdpMessage { Type = SdpMessageType.Offer, Content = message.Sdp };
+            await _peerConnection.SetRemoteDescriptionAsync(remoteDesc);
 
-            var json = JsonSerializer.Serialize(message);
-            await _socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(json)),
-                WebSocketMessageType.Text, true, CancellationToken.None);
+            bool success = _peerConnection.CreateAnswer();
+            if (!success)
+            {
+                LoggerUtility.LogError("Failed to create WebRTC answer.");
+            }
         }
 
-        public async Task StartCall(string recipient)
+        private async Task HandleAnswerAsync(SignalingMessage message)
         {
-            var message = new SignalingMessage
-            {
-                Type = "call",
-                SenderId = "me",
-                RecipientId = recipient
-            };
-
-            var json = JsonSerializer.Serialize(message);
-            await _socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(json)),
-                WebSocketMessageType.Text, true, CancellationToken.None);
+            LoggerUtility.LogInfo("Received SDP answer.");
+            var remoteDesc = new SdpMessage { Type = SdpMessageType.Answer, Content = message.Sdp };
+            await _peerConnection.SetRemoteDescriptionAsync(remoteDesc);
         }
 
-        public async Task AcceptCall(string recipient)
+        private void HandleIceCandidate(SignalingMessage message)
         {
-            var message = new SignalingMessage
+            LoggerUtility.LogInfo("Received ICE candidate.");
+            var candidate = new IceCandidate
             {
-                Type = "acceptCall",
-                SenderId = "me",
-                RecipientId = recipient
+                Content = message.IceCandidate.Candidate,
+                SdpMid = message.IceCandidate.SdpMid,
+                SdpMlineIndex = message.IceCandidate.SdpMLineIndex
             };
-
-            var json = JsonSerializer.Serialize(message);
-            await _socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(json)),
-                WebSocketMessageType.Text, true, CancellationToken.None);
+            _peerConnection.AddIceCandidate(candidate);
         }
 
-        public async Task RejectCall(string recipient)
+        private void HandleLeave()
         {
-            var message = new SignalingMessage
-            {
-                Type = "rejectCall",
-                SenderId = "me",
-                RecipientId = recipient
-            };
-
-            var json = JsonSerializer.Serialize(message);
-            await _socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(json)),
-                WebSocketMessageType.Text, true, CancellationToken.None);
+            LoggerUtility.LogInfo("Remote peer has left the session.");
         }
+    }
 
-        public async Task EndCall(string recipient)
-        {
-            var message = new SignalingMessage
-            {
-                Type = "endCall",
-                SenderId = "me",
-                RecipientId = recipient
-            };
-
-            var json = JsonSerializer.Serialize(message);
-            await _socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(json)),
-                WebSocketMessageType.Text, true, CancellationToken.None);
-        }
+    public class IceCandidate : Microsoft.MixedReality.WebRTC.IceCandidate
+    {
+        public string Candidate { get; set; }
+        public string SdpMid { get; set; }
+        public int SdpMLineIndex { get; set; }
     }
 }

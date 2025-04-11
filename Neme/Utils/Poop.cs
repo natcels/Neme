@@ -81,7 +81,7 @@
 //        {
 //            if (string.IsNullOrEmpty(recipient.AesKey))
 //            {
-//                Console.WriteLine("AES key not available. Cannot send message.");
+//                LoggerUtility.LogInfo("AES key not available. Cannot send message.");
 //                return;
 //            }
 
@@ -95,14 +95,14 @@
 //        {
 //            if (string.IsNullOrEmpty(AesKey))
 //            {
-//                Console.WriteLine("No AES key available for decryption.");
+//                LoggerUtility.LogInfo("No AES key available for decryption.");
 //                return;
 //            }
 
 //            AesEncryption aes = new AesEncryption(AesKey);
 //            string decryptedMessage = aes.Decrypt(encryptedMessage);
 
-//            Console.WriteLine($"Received Message: {decryptedMessage}");
+//            LoggerUtility.LogInfo($"Received Message: {decryptedMessage}");
 //        }
 
       
@@ -407,7 +407,7 @@
 //                        // 🔍 Check if Content is NULL or empty before decrypting
 //                        if (string.IsNullOrEmpty(encryptedContent))
 //                        {
-//                            Console.WriteLine("Skipping empty message...");
+//                            LoggerUtility.LogInfo("Skipping empty message...");
 //                            continue; // Skip empty messages
 //                        }
 
@@ -422,7 +422,7 @@
 //                        }
 //                        catch (Exception ex)
 //                        {
-//                            Console.WriteLine($"Decryption failed: {ex.Message}");
+//                            LoggerUtility.LogInfo($"Decryption failed: {ex.Message}");
 //                            Messages.Add(new ChatMessage
 //                            {
 //                                SenderName = reader["SenderName"].ToString(),

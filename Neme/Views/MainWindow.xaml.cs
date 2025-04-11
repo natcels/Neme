@@ -2,16 +2,22 @@
 using System;
 using System.Windows;
 using Neme.ViewModels;
+using Neme.Helpers;
 using Neme.Models;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Data.SQLite;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using NAudio.CoreAudioApi.Interfaces;
+using Neme.helpers;
+using MaterialDesignThemes.Wpf;
 
 namespace Neme.Views
 {
     public partial class MainWindow : Window
     {
+        public User user;        
         private PeerManager peerManager;
         private TcpListenerHandler tcpListenerHandler;
         private TcpClientHandler tcpClientHandler;
@@ -19,20 +25,43 @@ namespace Neme.Views
         private int port;
         private string broadcastAddress;
         private string encryptionKey;
+        public string Username;
+        public string machineName;
 
         public MainWindow()
         {
+            InitializeComponent();
+            machineName = Environment.MachineName;
+           
             DataContext = new MainViewModel();
 
-            // Initialize settings
-            InitializeSettings();
            
             
+            // Initialize settings
+            InitializeSettings();
+            
             // Initialize components
-            InitializeComponents();
-
+            ShowLogin();
             InitializeDatabase();
 
+        }
+
+        private void ShowLogin()
+        {
+            var loginView = new AuthView();
+            loginView.LoginSucceeded += OnLoginSuccess;
+            MainContent.Content = loginView;
+
+        }
+
+        private void OnLoginSuccess(object sender, EventArgs e)
+        {
+            ShowMainApp();
+        }
+
+        public void ShowMainApp()
+        {
+            MainContent.Content = new MainView(); // Your main app
         }
 
         private void InitializeSettings()
@@ -42,29 +71,6 @@ namespace Neme.Views
             broadcastAddress = "192.168.1.107";
         }
 
-        private void InitializeComponents()
-        {
-            try
-            {
-                // Initialize PeerManager for discovery and heartbeat
-                peerManager = new PeerManager(broadcastAddress, port, encryptionKey);
-
-                // Initialize TCP listener for incoming messages
-                tcpListenerHandler = new TcpListenerHandler(port + 1);
-                tcpListenerHandler.StartListening();
-
-                // Initialize TCP client for outgoing messages
-                tcpClientHandler = new TcpClientHandler("127.0.0.1", port + 1, encryptionKey);
-
-                // Initialize WebSocket client for signaling
-                _client = new WebSocketClient();
-                _client.Connect();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error initializing components: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
 
         private void StartBroadcasting()
         {
@@ -81,13 +87,7 @@ namespace Neme.Views
 
       
         // Handle file opening (for file and image messages)
-        private void OpenFile(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(filePath) { UseShellExecute = true });
-            }
-        }
+     
 
         private void InitializeDatabase()
         {
@@ -105,11 +105,6 @@ namespace Neme.Views
             }
         }
 
-        
-
- 
-
-       
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -119,6 +114,5 @@ namespace Neme.Views
             tcpListenerHandler?.StopListening();
         }
 
-    
     }
 }

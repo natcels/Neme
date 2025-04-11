@@ -1,7 +1,7 @@
-﻿<Window x:Class="Neme.Views.ScreenShareWindow"
+﻿<UserControl x:Class="Neme.Views.ScreenShareWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Screen Share" Height="600" Width="800">
+         Height="auto" Width="auto">
     <Grid>
         <Viewbox>
             <Image Source="{Binding SharedScreenFeed}" Stretch="Uniform"/>
@@ -11,4 +11,4 @@
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" 
                 Margin="10" Background="Red" Foreground="White"/>
     </Grid>
-</Window>
+</UserControl>

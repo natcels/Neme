@@ -16,7 +16,7 @@ namespace Neme.Utils
             _webSocket = new WebSocket("ws://127.0.0.1:8080/signaling");  
             _webSocket.OnMessage += (sender, e) =>
             {
-                //Console.WriteLine("Received: " + e.Data);
+                //LoggerUtility.LogInfo("Received: " + e.Data);
             };
         }
         public void Connect()

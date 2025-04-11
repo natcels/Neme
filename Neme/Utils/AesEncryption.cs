@@ -79,5 +79,41 @@ namespace Neme.Utils
                 return $"Decryption failed: {ex.Message}";
             }
         }
+
+        public static (byte[] EncryptedData, byte[] Key, byte[] IV) EncryptFile(string filePath)
+        {
+            using (Aes aes = Aes.Create())
+            {
+                aes.KeySize = 256;
+                aes.GenerateKey();
+                aes.GenerateIV();
+
+                using (FileStream fsInput = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                using (MemoryStream msOutput = new MemoryStream())
+                using (CryptoStream cryptoStream = new CryptoStream(msOutput, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                {
+                    fsInput.CopyTo(cryptoStream);
+                    cryptoStream.FlushFinalBlock();
+                    return (msOutput.ToArray(), aes.Key, aes.IV);
+                }
+            }
+        }
+
+        public static byte[] DecryptFile(byte[] encryptedData, byte[] key, byte[] iv)
+        {
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = key;
+                aes.IV = iv;
+
+                using (MemoryStream msInput = new MemoryStream(encryptedData))
+                using (MemoryStream msOutput = new MemoryStream())
+                using (CryptoStream cryptoStream = new CryptoStream(msInput, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                {
+                    cryptoStream.CopyTo(msOutput);
+                    return msOutput.ToArray();
+                }
+            }
+        }
     }
 }
