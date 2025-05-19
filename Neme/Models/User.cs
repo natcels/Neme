@@ -8,10 +8,9 @@ namespace Neme.Models
     {
         private int _id;
         private string _username;
-        private string _passwordHash;
+        private string _password;
         private string? _email;
         private string _department;
-        private string _role;
         private string _avatarPath; // Stores avatar image path
 
         public int Id
@@ -26,10 +25,10 @@ namespace Neme.Models
             set { _username = value; OnPropertyChanged(); }
         }
 
-        public string PasswordHash
+        public string Password
         {
-            get => _passwordHash;
-            set { _passwordHash = HashPassword(value); OnPropertyChanged(); }
+            get => _password;
+            set { _password = value; OnPropertyChanged(); }
         }
 
         public string? Email
@@ -44,11 +43,6 @@ namespace Neme.Models
             set { _department = value; OnPropertyChanged(); }
         }
 
-        public string Role
-        {
-            get => _role;
-            set { _role = value; OnPropertyChanged(); }
-        }
 
         public string AvatarPath
         {
@@ -63,10 +57,7 @@ namespace Neme.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private static string HashPassword(string password)
-        {
-            return BCrypt.Net.BCrypt.HashPassword(password);
-        }
+      
 
         public static bool VerifyPassword(string enteredPassword, string storedHash)
         {

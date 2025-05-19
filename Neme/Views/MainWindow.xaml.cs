@@ -51,12 +51,14 @@ namespace Neme.Views
             var loginView = new AuthView();
             loginView.LoginSucceeded += OnLoginSuccess;
             MainContent.Content = loginView;
+            Username = loginView.UsernameText.Text;
 
         }
 
         private void OnLoginSuccess(object sender, EventArgs e)
         {
             ShowMainApp();
+            
         }
 
         public void ShowMainApp()

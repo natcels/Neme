@@ -17,8 +17,8 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Click="ToggleSidebar" Background="Transparent" Foreground="White" HorizontalAlignment="Left" Padding="10" ToolTip="Toggle Menu">
-            <materialDesign:PackIcon Kind="Menu" Width="20" Height="20"/>
+        <Button Click="ToggleSidebar" Background="Transparent" Foreground="White" HorizontalAlignment="Left" Padding="10" ToolTip="Toggle Menu" Margin="10">
+            <materialDesign:PackIcon Kind="Menu" Width="20" Height="20" />
 
         </Button>
         <ListBox x:Name="NavigationMenu" Grid.Row="1" 

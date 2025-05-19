@@ -1,5 +1,6 @@
 ﻿ using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.EntitySql;
 using System.Data.SQLite;
 using System.IO;
 using Neme.Models;
@@ -30,10 +31,35 @@ namespace Neme.Data
                 CreatePeersTable(connection);
                 CreateTasksTable(connection);
                 CreateUsersTable(connection);
+                CreateRemindersTable(connection);
+                CreateSHaredFIlesTable(connection);
+            }
+        }
+
+        /// <summary>
+        /// Returns a connection to the database.
+        /// </summary>
+        public static SQLiteConnection GetConnection()
+        {
+            return new SQLiteConnection(ConnectionString);
+        }
+
+        private static void CreateRemindersTable(SQLiteConnection connection)
+        {
+            string query = @"
+            CREATE TABLE IF NOT EXISTS Reminders (
+                Id TEXT PRIMARY KEY NOT NULL,
+                Title TEXT NOT NULL,
+                Notes TEXT,
+                ReminderDate TEXT NOT NULL,
+                IsCompleted INTEGER NOT NULL DEFAULT 0
+                );
+                ";
+            using (var command = new SQLiteCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
             }
 
-           
-           
         }
 
         private static void CreateUsersTable(SQLiteConnection connection)
@@ -107,10 +133,10 @@ namespace Neme.Data
                 CREATE TABLE IF NOT EXISTS Tasks (
                     TaskId TEXT PRIMARY KEY,
                     TaskName TEXT NOT NULL,
-                    Status INTEGER NOT NULL,  -- 0 = Initiated, 1 = In Progress, 2 = Completed, 3 = Overdue
+                    Status INTEGER NOT NULL,
                     StartDate TEXT NOT NULL,
                     EndDate TEXT NOT NULL,
-                    AssignedTo TEXT  -- Stores peer names or IDs (comma-separated if multiple)
+                    AssignedTo TEXT 
                 );";
 
             using (var command = new SQLiteCommand(query, connection))
@@ -119,13 +145,27 @@ namespace Neme.Data
             }
         }
 
-        /// <summary>
-        /// Returns a connection to the database.
-        /// </summary>
-        public static SQLiteConnection GetConnection()
+       
+
+
+        private static void CreateSHaredFIlesTable(SQLiteConnection connection)
         {
-            return new SQLiteConnection(ConnectionString);
+            string query = @"
+                    CREATE TABLE IF NOT EXISTS SharedFiles (
+                        FileID TEXT NOT NULL PRIMARY KEY,
+                        FileName TEXT NOT NULL,
+                        FilePath TEXT NOT NULL,
+                        OwnerUsername TEXT NOT NULL,
+                        Collaborators TEXT,
+                        UploadedAt TEXT
+                    )";
+            using (var command = new SQLiteCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
+            }
         }
+
+        // Insert Data
 
         public static void AddUser(User user)
         {
@@ -139,7 +179,7 @@ namespace Neme.Data
                 using (var command = new SQLiteCommand(insertQuery, connection))
                 {
                     command.Parameters.AddWithValue("@Username", user.Username);
-                    command.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
+                    command.Parameters.AddWithValue("@Password", user.Password);
                     command.Parameters.AddWithValue("@Email", user.Email ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Department", user.Department);
                     command.Parameters.AddWithValue("@AvatarPath", user.AvatarPath ?? (object)DBNull.Value);
@@ -147,5 +187,78 @@ namespace Neme.Data
                 }
             }
         }
+
+        public static void InsertSharedFile(SharedFile SharedFile)
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string insertQuery = @"
+                INSERT INTO SharedFiles (FileID, FileName, FilePath, OwnerUsername, Collaborators, UploadedAt)
+                VALUES (@FileID, @FileName, @FilePath, @OwnerUsername, @Collaborators, @UploadedAt)
+                ";
+                using (var command = new SQLiteCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@FileID", SharedFile.Id.ToString().ToUpper());
+                    command.Parameters.AddWithValue("@FileName", SharedFile.FileName);
+                    command.Parameters.AddWithValue("@FilePath", SharedFile.FilePath);
+                    command.Parameters.AddWithValue("@OwnerUserName", SharedFile.OwnerUsername);
+                    command.Parameters.AddWithValue("@Collaborators", SharedFile.Collaborators);
+
+                    command.ExecuteNonQuery ();    
+                }
+            }
+        }
+
+        public static void AddReminder(Reminder reminder)
+        {
+            using (var connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "INSERT INTO Reminders (Title, Notes, ReminderDate, IsCompleted) VALUES (@Title, @Notes, @ReminderDate, @IsCompleted)";
+
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Title", reminder.Title);
+                    command.Parameters.AddWithValue("@Notes", reminder.Notes);
+                    command.Parameters.AddWithValue("@ReminderDate", reminder.ReminderDate.ToString("s")); // ISO format
+                    command.Parameters.AddWithValue("@IsCompleted", reminder.IsCompleted ? 1 : 0);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Read Data
+
+        public static List<Reminder> GetAllReminders()
+        {
+            var reminders = new List<Reminder>();
+            using (var connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "SELECT * FROM Reminders";
+
+                using (var command = new SQLiteCommand(query, connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reminders.Add(new Reminder
+                        {
+                            Id = reader["Id"].ToString(),
+                            Title = reader["Title"].ToString(),
+                            Notes = reader["Notes"].ToString(),
+                            ReminderDate = DateTime.Parse(reader["ReminderDate"].ToString()),
+                            IsCompleted = Convert.ToInt32(reader["IsCompleted"]) == 1
+                        });
+                    }
+                }
+            }
+
+            return reminders;
+        }
+
+        // Update Data
+
     }
 }

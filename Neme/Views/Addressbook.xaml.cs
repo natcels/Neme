@@ -19,7 +19,7 @@ using System.Windows.Shapes;
 namespace Neme.Views
 {
     /// <summary>
-    /// Interaction logic for Addressbook.xaml
+    /// Interaction logic for AddressBook.xaml
     /// </summary>
     public partial class Addressbook : UserControl
     {

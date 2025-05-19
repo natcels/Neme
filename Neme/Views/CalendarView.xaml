@@ -5,10 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Neme.Views"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+
          Height="auto" Width="auto">
     <Grid>
         <Calendar x:Name="MeetingCalendar"/>
-        <Button Content="Schedule Meeting" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <StackPanel Orientation="Horizontal">
+            <Button  HorizontalAlignment="Right" 
+                     Margin="20"
+                     VerticalAlignment="Bottom" Click="Button_Click">
+                <StackPanel Orientation="Horizontal">
+                    
+                    <TextBlock Text="Set Reminder" />
+                </StackPanel>
+            </Button>
+            <Button Content="Schedule Meeting" 
+                    Margin="20"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom" Click="Button_Click_1"/>
+        </StackPanel>
 
+        <ListBox x:Name="UpcomingRemindersList" Height="200">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding ReminderDate}" FontSize="12" Foreground="Gray"/>
+                        <TextBlock Text="{Binding Notes}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>

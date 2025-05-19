@@ -21,7 +21,7 @@ namespace Neme.Services
                 using (var command = new SQLiteCommand(insertQuery, connection))
                 {
                     command.Parameters.AddWithValue("@Username", user.Username);
-                    command.Parameters.AddWithValue("@PasswordHash", HashPassword(user.PasswordHash));
+                    command.Parameters.AddWithValue("@Password", HashPassword(user.Password));
                     command.Parameters.AddWithValue("@Email", user.Email ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Department", user.Department);
                     command.Parameters.AddWithValue("@AvatarPath", user.AvatarPath ?? (object)DBNull.Value);
@@ -48,7 +48,7 @@ namespace Neme.Services
                             {
                                 Id = Convert.ToInt32(reader["Id"]),
                                 Username = reader["Username"].ToString(),
-                                PasswordHash = reader["PasswordHash"].ToString(),
+                                Password = reader["Password"].ToString(),
                                 Email = reader["Email"].ToString(),
                                 Department = reader["Department"].ToString(),
                                 AvatarPath = reader["AvatarPath"].ToString()
@@ -65,7 +65,7 @@ namespace Neme.Services
             var user = GetUser(username);
             if (user == null) return false;
 
-            return VerifyPassword(password, user.PasswordHash);
+            return VerifyPassword(password, user.Password);
         }
 
         private static string HashPassword(string password)

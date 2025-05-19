@@ -22,7 +22,7 @@ namespace Neme.Views
     /// </summary>
     public partial class Sidebar : UserControl
     {
-        private bool isCollapsed = false;
+        private bool isCollapsed = true;
         public Sidebar()
         {
             InitializeComponent();
@@ -59,14 +59,16 @@ namespace Neme.Views
 
         private void Navigation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (NavigationMenu.SelectedItem is ListBoxItem selectedItem)
+            //if (NavigationMenu.SelectedItem is ListBoxItem)
+            //{
+            //    if (this.Parent is MainView parentPanel)
+            //    {
+            //        parentPanel.ShowChild(NavigationMenu.SelectedIndex);
+            //    }
+            //}
+            if(this.Parent is MainView ParentPanel)
             {
-                //  ((MainWindow)Application.Current.MainWindow).MainContent.Source =new System.Uri(selectedItem.Tag.ToString(), UriKind.Relative);
-                //((MainWindow)Application.Current.MainWindow).ShowChild(NavigationMenu.SelectedIndex);
-                if(this.Parent is MainView parentPanel)
-                {
-                    parentPanel.ShowChild(NavigationMenu.SelectedIndex);
-                }
+                ParentPanel.ShowChild(NavigationMenu.SelectedIndex);
             }
         }
     }

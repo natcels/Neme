@@ -18,61 +18,7 @@ namespace Neme.ViewModels
         protected void OnPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private string _username;
-        public string Username
-        {
-            get => _username;
-            set
-            {
-                _username = value;
-                OnPropertyChanged(nameof(Username));
-            }
-        }
-
-        private string _password;
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
-            }
-        }
-
-        private string? _email;
-        public string? Email
-        {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged(nameof(Email));
-            }
-        }
-
-        private string _department;
-        public string Department
-        {
-            get => _department;
-            set
-            {
-                _department = value;
-                OnPropertyChanged(nameof(Department));
-            }
-        }
-
-        private string? _avatarPath;
-        public string? AvatarPath
-        {
-            get => _avatarPath;
-            set
-            {
-                _avatarPath = value;
-                OnPropertyChanged(nameof(AvatarPath));
-            }
-        }
-
+        public User User { get; set; }
         public RelayCommand RegisterCommand { get; }
         public RelayCommand LoginCommand { get; }
         public RelayCommand SelectAvatarCommand { get; }
@@ -86,13 +32,13 @@ namespace Neme.ViewModels
 
         private void RegisterUser()
         {
-            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password) || string.IsNullOrWhiteSpace(Department))
+            if (string.IsNullOrWhiteSpace(User.Username) || string.IsNullOrWhiteSpace(User.Password) || string.IsNullOrWhiteSpace(User.Department))
             {
                 MessageBox.Show("All fields (except Email) are required!", "Registration Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            if (UserService.UserExists(Username))
+            if (UserService.UserExists(User.Username))
             {
                 MessageBox.Show("Username already taken!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -100,35 +46,35 @@ namespace Neme.ViewModels
 
             var newUser = new User
             {
-                Username = Username,
-                PasswordHash = Password,
-                Email = Email,
-                Department = Department,
-                AvatarPath = AvatarPath
+                Username = User.Username,
+                Password = User.Password,
+                Email = User.Email,
+                Department = User.Department,
+                AvatarPath = User.AvatarPath
             };
 
             UserService.AddUser(newUser);
             MessageBox.Show("Registration successful! You can now log in.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void LoginUser()
+        public void LoginUser()
         {
-            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(User.Username) || string.IsNullOrWhiteSpace(User.Password))
             {
-                MessageBox.Show("Enter your username and password!", "Login Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Enter your Username and password!", "Login Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            if (UserService.ValidateUser(Username, Password))
+            if (UserService.ValidateUser(User.Username, User.Password))
             {
-                var user = UserService.GetUser(Username);
-                AvatarPath = user.AvatarPath;
-
-                MessageBox.Show($"Welcome, {user.Username}!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                //var user = UserService.GetUser(Username);
+                //AvatarPath = user.AvatarPath;
+                
+                MessageBox.Show($"Welcome, {User.Username}!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                MessageBox.Show("Invalid username or password!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Invalid Username or password!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -143,9 +89,11 @@ namespace Neme.ViewModels
 
             if (openFileDialog.ShowDialog() == true)
             {
-                AvatarPath = openFileDialog.FileName;
+                User.AvatarPath = openFileDialog.FileName;
             }
         }
+
+
 
     }
 

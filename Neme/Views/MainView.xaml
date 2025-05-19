@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Neme.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -16,11 +17,77 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <local:Sidebar Grid.RowSpan="2"/>
+        
+<!--        <local:Sidebar Grid.RowSpan="2" Margin="5,5,0,5"/>-->
+        <Grid Background="{DynamicResource SidebarBackground}" Grid.RowSpan="2" x:Name="SidebarNav" Width="250">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Click="ToggleSidebar" Background="Transparent" Foreground="White" HorizontalAlignment="Left" Padding="10" ToolTip="Toggle Menu" Margin="10">
+                <materialDesign:PackIcon Kind="Menu" Width="20" Height="20" />
+
+            </Button>
+            <ListBox x:Name="NavigationMenu" Grid.Row="1" 
+             FontSize="15"
+             SelectionChanged="Navigation_SelectionChanged" Foreground="White">
+
+                <ListBoxItem  Tag="1">
+                    <StackPanel Orientation="Horizontal" ToolTip="Address Book">
+                        <materialDesign:PackIcon Kind="Contact" Width="25" Height="25" Margin="10"/>
+                        <TextBlock Text="Contacts" x:Name="ContactsLabel" Visibility="Visible" Margin="10"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Tag="2">
+                    <StackPanel Orientation="Horizontal" ToolTip="Chats and Messages">
+                        <materialDesign:PackIcon Kind="CHat" Width="25" Height="25" Margin="10"/>
+                        <TextBlock Text="Chats" x:Name="ChatsLabel" Visibility="Visible" Margin="10"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Tag="3">
+                    <StackPanel Orientation="Horizontal" ToolTip="Set Reminders">
+                        <materialDesign:PackIcon Kind="CalendarTask" Width="25" Height="25" Margin="10"/>
+                        <TextBlock Text="Calendar" x:Name="CalendarLabel" Visibility="Visible" Margin="10"/>
+                    </StackPanel>
+                </ListBoxItem>
+
+                <ListBoxItem Tag="4">
+                    <StackPanel Orientation="Horizontal" ToolTip="Kanban Board">
+                        <materialDesign:PackIcon Kind="Subtasks" Width="25" Height="25" Margin="10"/>
+                        <TextBlock Text="Tasks" x:Name="TaskLabel" Visibility="Visible" Margin="10"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Tag="5">
+                    <StackPanel Orientation="Horizontal" ToolTip="Collaboration">
+                        <materialDesign:PackIcon Kind="Teamviewer" Width="25" Height="25" Margin="10"/>
+                        <TextBlock Text="Collaboration" x:Name="KanbanLabel" Visibility="Visible" Margin="10"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Tag="6">
+                    <StackPanel Orientation="Horizontal" ToolTip="Meetings">
+                        <materialDesign:PackIcon Kind="VirtualMeeting" Width="25" Height="25" Margin="10"/>
+                        <TextBlock Text="Meetings" x:Name="MeetingsLabel" Visibility="Visible" Margin="10"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Tag="7">
+                    <StackPanel Orientation="Horizontal" ToolTip="Settings">
+                        <materialDesign:PackIcon Kind="Cog" Width="25" Height="25" Margin="10"/>
+                        <TextBlock Text="Settings" x:Name="SettingsLabel" Visibility="Visible" Margin="10"/>
+                    </StackPanel>
+                </ListBoxItem>
+
+
+
+
+            </ListBox>
+        </Grid>
+
         <DockPanel Height="60" Background="#F3F3F3" Grid.Column="2" >
 
             <!-- Right Side: Profile, Notifications, Settings -->
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="10">
+                <!-- User Profile Section -->
+                <TextBlock Text="Admin" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black" FontSize="14" FontWeight="Bold" Padding="10"/>
 
                 <!-- Notifications Dropdown -->
                 <Button Content="🔔" Style="{StaticResource IconButtonStyle}" Click="ToggleNotificationsMenu"/>
@@ -53,14 +120,7 @@
                         </StackPanel>
                     </Border>
                 </Popup>
-
-                <!-- User Profile Section -->
-                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                    <Image Source="{Binding UserAvatar}" Width="35" Height="35"  />
-                    <TextBlock Text="{Binding Username}" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                </StackPanel>
-
-            </StackPanel>
+           </StackPanel>
 
         </DockPanel>
         <DockPanel Margin="5" x:Name="ChildArea" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" LastChildFill="True">

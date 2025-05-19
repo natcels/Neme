@@ -113,7 +113,7 @@
         </StackPanel>
 
         <!-- In Progress Column -->
-        <StackPanel Grid.Column="1" Background="#FCF8E3" >
+        <StackPanel Grid.Column="1" Background="#FCF8E3" Margin="10 0" >
             <StackPanel.Triggers>
                 <EventTrigger RoutedEvent="StackPanel.Loaded">
                     <BeginStoryboard>
@@ -136,6 +136,7 @@
                      ItemsSource="{Binding InProgressTasks}"
                      AllowDrop="True"
                      MinHeight="400"
+                     
                       MouseMove="TaskList_MouseMove"
                      DragOver="TaskList_DragOver"
                      Drop="TaskList_Drop">

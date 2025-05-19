@@ -25,7 +25,7 @@ namespace Neme.Views
         public event EventHandler LoginSucceeded;
         public AuthView()
         {
-            DataContext =new AuthViewModel();
+           // DataContext =new AuthViewModel();
             InitializeComponent();
         }
 
